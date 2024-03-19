@@ -11,6 +11,23 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    public function index(){
+        $products = User::all();
+         return response()->json(['products' => $products]);
+    }
+
+
+    public function show($id)
+    {
+        $product = Auth::find($id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+        return response()->json(['product' => $product]);
+    }
+
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->only('name', 'email', 'password', 'password_confirmation'), [
@@ -44,7 +61,12 @@ class AuthController extends Controller
                 'token' => $user->createToken('Sanctom+Socialite')->plainTextToken,
                 'user' => $user,
             ];
-            return response()->json($data, 200);
+            // return response()->json($data, 200);
+
+            return response()->json([
+                'status' => 200,
+                'message' => "Login Succesfully"
+            ]);
         }
     }
 }
